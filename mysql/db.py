@@ -39,6 +39,12 @@ class Database:
         self.cursor.execute(query='SELECT COUNT(*) FROM {}'.format(table_name))
         return self.cursor.fetchone()[0] == 0
 
-    def insert(self, first: str, second: str):
-        self.cursor.execute('INSERT INTO {0} VALUES({1})'.format(first, second))
+    def insert(self, table: str, values: str):
+        self.cursor.execute('INSERT INTO {0} VALUES({1})'.format(table, values))
+
+    def select(self, sel: str, table: str, condition: str):
+        self.cursor.execute('SELECT {0} FROM {1} WHERE {2}'.format(sel, table, condition))
+        return self.cursor.fetchall()
+
+    def save(self):
         self.con.commit()
