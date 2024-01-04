@@ -40,7 +40,7 @@ class Database:
         return self.cursor.fetchone()[0] == 0
 
     def insert(self, table: str, values: str):
-        self.cursor.execute('INSERT INTO {0} VALUES({1})'.format(table, values))
+        return self.cursor.execute('INSERT INTO {0} VALUES({1})'.format(table, values))
 
     def select(self, sel: str, table: str, condition: str):
         self.cursor.execute('SELECT {0} FROM {1} WHERE {2}'.format(sel, table, condition))
