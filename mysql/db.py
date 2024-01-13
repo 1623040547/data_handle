@@ -5,6 +5,8 @@ user = 'root'
 psd = 'zr2002081577'
 port = 3306
 
+MAX_SIZE = 1024 * 1024 * 1024
+
 
 class Database:
     db = None
@@ -20,6 +22,8 @@ class Database:
         self.__init_database__()
 
     def __init_database__(self):
+        # set global max_allowed_packet = 1073741824;
+        self.cursor.execute('set global max_allowed_packet = {0}'.format(MAX_SIZE))
         self.cursor.execute('CREATE DATABASE IF NOT EXISTS ' + self.db)
         self.cursor.close()
         self.con.close()
@@ -48,3 +52,5 @@ class Database:
 
     def save(self):
         self.con.commit()
+
+

@@ -1,31 +1,40 @@
+import re
 from xml.dom.minidom import parse
-import pymysql
 
-from mysql.dataset_table import DataSet
-from mysql.db import Database
+from data_gen.model.chat_glm_turbo import chat_glm_turbo
+from handle.prot_handle import ProtHandle, DatasetFile
+from handle.my_template import MyTemplate
+from mysql.dataset.dataset_dao import DataSetDao
 
-dataset_files = {
-    'restaurant': './dataset/semeval2014/restaurant/Restaurants_Train.xml',
-    'laptop': './dataset/semeval2014/laptop/Laptops_Train.xml'
-}
+# handler = ProtHandle()
+#
+# handler.parseAndSave(DatasetFile.restaurant)
 
-scene = 'laptop'
+# data = DataSetDao().getSentenceId(scene='laptop',  model='')
+# print(data)
 
-dom = parse(dataset_files[scene])
-# 获取文档元素对象
-data = dom.documentElement
-# 获取 student
-sentences = data.getElementsByTagName('sentence')
+# print(chat_glm_turbo(template=str(MyTemplate.t1.value),
+#                      content="""
+# 1.[food,kitchen,menu]The food is uniformly exceptional, with a very capable kitchen which will proudly whip up whatever you feel like eating, whether it's on the menu or not.
+# 2.[food,perks]Not only was the food outstanding, but the little 'perks' were great.
+# 3.[food]Nevertheless the food itself is pretty good.
+# 4.[drinks,check]It took half an hour to get our check, which was perfect since we could sit, have drinks and talk!
+# """))
 
-DataSet.create_dataset_table()
+text = """
+1.[food, kitchen, menu] The cuisine at this establishment is consistently excellent, prepared by a skilled kitchen that gladly creates any dish you desire, regardless of whether it's listed on the menu.\n2.[food, perks] The exceptional food and thoughtful extras made our experience even better.\n3.[food] Despite some concerns, the food served here is genuinely satisfying.\n4.[drinks, check] It took half an hour to receive our bill, which was entirely acceptable as it gave us time to relax, enjoy our beverages, and engage in conversation!
+"""
 
-for sentence in sentences:
-    print(sentence)
-    text = sentence.getElementsByTagName('text')[0].firstChild.data
-    aspect_polarity = []
-    for aspectTerm in sentence.getElementsByTagName('aspectTerm'):
-        term = aspectTerm.getAttribute('term')
-        polarity = aspectTerm.getAttribute('polarity')
-        aspect_polarity.append((term,polarity))
-    if len(aspect_polarity) != 0:
-        DataSet.saveSentence(scene=scene, sentence=text, aspect_polarity=aspect_polarity)
+slices = text.split('\n')
+for slice in slices:
+    if slice.__contains__('1.'):
+        aspects = []
+        text = ''
+        slice = slice.strip('1.')
+        fr = re.match(r'\[([^\[|\]]*)]', slice)
+        slice = slice.replace(fr.group(), '')
+        for aspect in fr.groups()[0].split(','):
+            aspect = aspect.strip(' ').rstrip(' ')
+            aspects.append(aspect)
+            print(aspect)
+            print(slice.__contains__(aspect))
