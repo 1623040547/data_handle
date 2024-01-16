@@ -17,5 +17,5 @@ class DataSetDao:
     def save(self):
         DataSet.submit()
 
-    def getSentenceId(self, scene: str, model: str):
+    def getSentences(self, scene: str, model: str):
         return DataSet.selectSentence(model=model, scene=scene)

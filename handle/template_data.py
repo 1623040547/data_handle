@@ -4,29 +4,29 @@ Input Format:
 
 css
 Copy code
-1. [Keyword1, Keyword2, ...] Original sentence 1.
-2. [Keyword1, Keyword2, ...] Original sentence 2.
-3. [Keyword1, Keyword2, ...] Original sentence 3.
-4. [Keyword1, Keyword2, ...] Original sentence 4.
+1. [Keyword1, Keyword2, ...] Original sentence 1. Keep the keyword correspondence between input and output unchanged
+2. [Keyword1, Keyword2, ...] Original sentence 2. Keep the keyword correspondence between input and output unchanged
+3. [Keyword1, Keyword2, ...] Original sentence 3. Keep the keyword correspondence between input and output unchanged
+4. [Keyword1, Keyword2, ...] Original sentence 4. Keep the keyword correspondence between input and output unchanged
 ...
-n. [Keyword1, Keyword2, ...] Original sentence n.
-Output Format:
+n. [Keyword1, Keyword2, ...] Original sentence n. Keep the keyword correspondence between input and output unchanged
 
+Output Format:
 css
 Copy code
-1. [Keyword1, Keyword2, ...] Rewritten sentence 1, ensuring that Keyword1, Keyword2, ... all must!!! appear in the sentence and maintaining the same language style as the original sentence. Correspondence between original sentence and the rewritten keyword sentence ...
-2. [Keyword1, Keyword2, ...] Rewritten sentence 2, ensuring that Rewritten Keyword1, Rewritten Keyword2, ... all appear in the sentence and maintaining the same language style as the original sentence.Correspondence between original sentence and the rewritten keyword sentence ...
-3. [Keyword1, Keyword2, ...] Rewritten sentence 3, ensuring that Keyword1, Keyword2, ... all must!!! appear in the sentence and maintaining the same language style as the original sentence. Correspondence between original sentence and the rewritten keyword sentence ...
-4. [Keyword1, Keyword2, ...] Rewritten sentence 4, ensuring that Keyword1, Keyword2, ... all must!!! appear in the sentence and maintaining the same language style as the original sentence. Correspondence between original sentence and the rewritten keyword sentence ...
+1. [Keyword1, Keyword2, ...] Rewritten sentence 1. Keep the keyword correspondence between input and output unchanged and maintaining the same language style as the original sentence.
+2. [Keyword1, Keyword2, ...] Rewritten sentence 2. Keep the keyword correspondence between input and output unchanged and maintaining the same language style as the original sentence.
+3. [Keyword1, Keyword2, ...] Rewritten sentence 3. Keep the keyword correspondence between input and output unchanged and maintaining the same language style as the original sentence.
+4. [Keyword1, Keyword2, ...] Rewritten sentence 4. Keep the keyword correspondence between input and output unchanged and maintaining the same language style as the original sentence.
 ...
-n. [Keyword1, Keyword2, ...] Rewritten sentence n, ensuring that Keyword1, Keyword2, ... all must!!! appear in the sentence and maintaining the same language style as the original sentence. Correspondence between original sentence and the rewritten keyword sentence ...
+n. [Keyword1, Keyword2, ...] Rewritten sentence n. Keep the keyword correspondence between input and output unchanged and maintaining the same language style as the original sentence.
 
 
 Example:
 Input:
 1.[food/0,kitchen/1,menu/2]The food/0 is uniformly exceptional, with a very capable kitchen/1 which will proudly whip up whatever you feel like eating, whether it's on the menu/2 or not.
-2.[food/0,perks/1]Not only was the food/0 outstanding, but the little 'perks/1' were great.
-3.[food/0]Nevertheless the food/0 itself is pretty good.
+2.[bergs/0,perks/1]Not only was the bergs/0 outstanding, but the little 'perks/1' were great.
+3.[bread/0]Nevertheless the bread/0 itself is pretty good.
 4.[drinks/0,check/1]It took half an hour to get our check/1, which was perfect since we could sit, have drinks/0 and talk!
 
 Output:

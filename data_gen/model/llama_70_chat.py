@@ -9,7 +9,7 @@ class Llama:
     def __init__(self):
         self.token = ""
 
-    def llama_70_chat(self,content):
+    def llama_70_chat(self, content, template: str):
         if self.token == "":
             self.token = get_access_token()
         url = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/llama_2_70b?access_token=" + self.token
@@ -17,8 +17,10 @@ class Llama:
         payload = json.dumps({
             "messages": [
                 {
-                    "role": "user",
-                    "content": content
+                    {"role": "user", "content": template},
+                    {"role": "assistant",
+                     "content": 'yes'},
+                    {"role": "user", "content": content},
                 }
             ]
         })

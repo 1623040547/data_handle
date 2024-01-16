@@ -29,6 +29,11 @@ class Sentence:
     promptId: int
     protId: int
 
+    def getAspectPolarity(self, aspect: str):
+        for aspect_p in self.aspect_polarity:
+            if aspect_p.aspect.lower() == aspect.lower():
+                return aspect_p
+
     @classmethod
     def sentence(cls):
         return Sentence(
@@ -50,3 +55,15 @@ class Polarity(Enum):
             return True
         except:
             return False
+
+
+class Scene(Enum):
+    laptop = 'laptop'
+    restaurant = 'restaurant'
+
+
+class ChatModel(Enum):
+    chat_35_turbo = 'chat_35_turbo'
+    chat_glm_turbo = 'chat_glm_turbo'
+    llama_70_chat = 'llama_70_chat'
+    none = ''
