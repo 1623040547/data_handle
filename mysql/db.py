@@ -50,7 +50,8 @@ class Database:
         self.cursor.execute('SELECT {0} FROM {1} WHERE {2}'.format(sel, table, condition))
         return self.cursor.fetchall()
 
+    def delete(self, table: str, condition: str):
+        return self.cursor.execute('DELETE FROM {0} WHERE {1}'.format(table, condition))
+
     def save(self):
         self.con.commit()
-
-

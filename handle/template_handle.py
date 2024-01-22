@@ -1,7 +1,7 @@
 import random
 
 from data_gen.model.chat import chat
-from handle.my_template import MyTemplate
+from handle.my_template import MyTemplate, _Count
 from mysql.dataset.daset_data import Scene, ChatModel
 from mysql.dataset.dataset_dao import DataSetDao
 
@@ -17,8 +17,10 @@ class TemplateHandle:
         self.dao = DataSetDao()
 
     def run(self, proto_model: ChatModel):
-        for i in [0, self.turn]:
+        for i in range(0, self.turn):
             print('turn: ', i)
+            _Count.invalidCount = 0
+            _Count.validCount = 0
             sentences = self.dao.getSentences(self.scene.value.__str__(), proto_model.value.__str__())
             random.shuffle(sentences)
             count = 0
@@ -40,3 +42,5 @@ class TemplateHandle:
                         break
                     except:
                         print('retry ... ', k)
+                print('\n')
+            print('\n\n\n')

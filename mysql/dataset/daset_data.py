@@ -16,6 +16,22 @@ class AspectPolarity:
             polarity='positive',
         )
 
+    def polarity_int(self):
+        if self.polarity == Polarity.positive.name.__str__():
+            return Polarity.positive.value
+        if self.polarity == Polarity.negative.name.__str__():
+            return Polarity.negative.value
+        if self.polarity == Polarity.neutral.name.__str__():
+            return Polarity.neutral.value
+
+    def polarity_tag(self):
+        if self.polarity == Polarity.positive.name.__str__():
+            return '/p'
+        if self.polarity == Polarity.negative.name.__str__():
+            return '/n'
+        if self.polarity == Polarity.neutral.name.__str__():
+            return '/0'
+
 
 @dataclass
 class Sentence:
@@ -33,6 +49,12 @@ class Sentence:
         for aspect_p in self.aspect_polarity:
             if aspect_p.aspect.lower() == aspect.lower():
                 return aspect_p
+
+    def getAspects(self):
+        asp = []
+        for aspect_p in self.aspect_polarity:
+            asp.append(aspect_p.aspect)
+        return asp
 
     @classmethod
     def sentence(cls):

@@ -14,8 +14,14 @@ class DataSetDao:
         for sentence in sentences:
             self.put(sentence)
 
+    def putInvalid(self, sentence: Sentence, aspects: [str]):
+        DataSet.saveInvalidSentence(sentence, aspects)
+
     def save(self):
         DataSet.submit()
+
+    def delete(self, sentenceId: int):
+        DataSet.deleteSentence(sentenceId)
 
     def getSentences(self, scene: str, model: str):
         return DataSet.selectSentence(model=model, scene=scene)
