@@ -1,0 +1,13 @@
+{
+  "kgan": {
+    "scene": "laptop",
+    "learning_rate": 0.001,
+    "dropout_rate": 0.55,
+    "seed": 131,
+    "bz": 32,
+    "best": [
+      78.28,
+      75.09
+    ]
+  }
+}

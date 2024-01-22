@@ -1,6 +1,6 @@
 from xml.dom.minidom import parse
 
-from mysql.dataset.daset_data import Sentence, AspectPolarity, Polarity
+from database.mysql.dataset.daset_data import Sentence, AspectPolarity, Polarity
 
 
 class XmlParse:

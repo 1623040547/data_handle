@@ -1,8 +1,8 @@
-from data_gen.model.chat_35_turbo import chat_35_turbo
-from data_gen.model.chat_glm_turbo import chat_glm_turbo
-from data_gen.model.llama_70_chat import Llama
+from handle.data_gen.model.chat_35_turbo import chat_35_turbo
+from handle.data_gen.model.chat_glm_turbo import chat_glm_turbo
+from handle.data_gen.model.llama_70_chat import Llama
 from handle.my_template import MyTemplate
-from mysql.dataset.daset_data import ChatModel
+from database.mysql.dataset.daset_data import ChatModel
 
 __l = Llama()
 

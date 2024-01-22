@@ -1,5 +1,5 @@
-from mysql.dataset.daset_data import Sentence, AspectPolarity
-from mysql.db import Database
+from database.mysql.dataset.daset_data import Sentence, AspectPolarity
+from database.mysql.db import Database
 
 _db = Database('dataset')
 
@@ -9,6 +9,7 @@ class TableName:
     aspect = "aspect"
     prompt = "prompt"
     sentence_aspect = "sentence_aspect"
+    invalid = "invalid"
 
 
 class Table:
@@ -41,6 +42,17 @@ class Table:
     foreign key(aspectId) references aspect(id)
     )              
 """
+    invalid = TableName.invalid + """(
+    id int(8) primary key auto_increment,
+    text LONGTEXT,
+    scene varchar(256),
+    model varchar(64),
+    promptId int(8), 
+    protId int(8),
+    aspects TEXT,
+    foreign key(promptId) references prompt(id)
+    )
+"""
 
 
 class DataSet:
@@ -59,6 +71,7 @@ class DataSet:
         _db.create_table(Table.aspect)
         _db.create_table(Table.sentence)
         _db.create_table(Table.sentence_aspect)
+        _db.create_table(Table.invalid)
         DataSet.__init_dataset_table()
 
     @classmethod
@@ -125,6 +138,13 @@ class DataSet:
             return DataSet.__saveSentence(model, scene, sentence, promptId)
 
     @classmethod
+    def __saveInvalid(cls, model: str, scene: str, sentence: str, promptId: int, aspects: [str], protId=-1, ):
+        return _db.insert(table=TableName.invalid + '(`model`,`text`,`scene`,`promptId`,`protId`,`aspects`)',
+                          values='\'{0}\',\'{1}\',\'{2}\',{3},{4},\'{5}\''
+                          .format(toQuot(model), toQuot(sentence), toQuot(scene), promptId, protId,
+                                  toQuot(','.join(aspects))))
+
+    @classmethod
     def __saveSentenceAspect(cls, polarity: str, sentenceId: int, aspectId: int):
         return _db.insert(table=TableName.sentence_aspect + '(`polarity`,`sentenceId`,`aspectId`)',
                           values='\'{0}\',{1},{2}'.format(toQuot(polarity), sentenceId, aspectId))
@@ -148,6 +168,8 @@ class DataSet:
             sentence.text = fromQuot(data[1])
             sentence.promptId = data[2]
             sentence.protId = data[3]
+            sentence.scene = scene
+            sentence.model = model
             sentences.append(sentence)
 
         cls.__getAspects()
@@ -167,7 +189,6 @@ class DataSet:
     def saveSentence(cls, sentence: Sentence):
         sentence.sentenceId = DataSet.sentenceExist(sentence.text)
         sentence.promptId = DataSet.promptExist(sentence.prompt)
-        sentence.protId = DataSet.sentenceExist(sentence.protText)
         if sentence.sentenceId > -1:
             return
         sentence.promptId = DataSet.__savePrompt(sentence.prompt)
@@ -182,6 +203,18 @@ class DataSet:
             )
             if count <= 0:
                 raise
+
+    @classmethod
+    def saveInvalidSentence(cls, sentence: Sentence, aspects: [str]):
+        sentence.promptId = DataSet.__savePrompt(sentence.prompt)
+        DataSet.__saveInvalid(model=sentence.model, scene=sentence.scene, sentence=sentence.text,
+                              promptId=sentence.promptId, aspects=aspects, protId=sentence.protId)
+
+    @classmethod
+    def deleteSentence(cls, id: int):
+        # 删除一个句子，首先删除器aspect_polarity,再删除此句子
+        _db.delete(TableName.sentence_aspect, 'sentenceId = {0}'.format(id))
+        return _db.delete(TableName.sentence, 'id = {0}'.format(id)) > 0
 
     @classmethod
     def submit(cls):

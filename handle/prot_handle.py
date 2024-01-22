@@ -1,6 +1,5 @@
-from mysql.dataset.daset_data import Sentence
-from mysql.dataset.dataset_dao import DataSetDao
-from parse.xml_parse import XmlParse
+from database.mysql.dataset.dataset_dao import DataSetDao
+from handle.parse.xml_parse import XmlParse
 from enum import Enum
 
 
