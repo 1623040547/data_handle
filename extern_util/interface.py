@@ -36,7 +36,8 @@ class ABSAModelRunner:
             seeds=arg.seeds,
             valset_ratio=0,
             outcomes=ExperimentOne.fromOutcomes(jsons),
-            ids=ExperimentOne.getIds(aug_sentences)
+            ids=ExperimentOne.getIds(aug_sentences),
+            method=''
         ))
 
     @classmethod
@@ -67,7 +68,8 @@ class ABSAModelRunner:
             seeds=arg.seeds,
             valset_ratio=0,
             outcomes=ExperimentOne.fromOutcomes(jsons),
-            ids=ExperimentOne.getIds(aug_sentences)
+            ids=ExperimentOne.getIds(aug_sentences),
+            method=''
         ))
 
     @classmethod
@@ -98,7 +100,8 @@ class ABSAModelRunner:
             seeds=arg.seeds,
             valset_ratio=arg.valset_ratio,
             outcomes=ExperimentOne.fromOutcomes(jsons),
-            ids=ExperimentOne.getIds(aug_sentences)
+            ids=ExperimentOne.getIds(aug_sentences),
+            method=''
         ))
 
     @classmethod
@@ -129,7 +132,8 @@ class ABSAModelRunner:
             seeds=arg.seeds,
             valset_ratio=arg.valset_ratio,
             outcomes=ExperimentOne.fromOutcomes(jsons),
-            ids=ExperimentOne.getIds(aug_sentences)
+            ids=ExperimentOne.getIds(aug_sentences),
+            method=''
         ))
 
     @classmethod
@@ -160,7 +164,8 @@ class ABSAModelRunner:
             seeds=arg.seeds,
             valset_ratio=arg.valset_ratio,
             outcomes=ExperimentOne.fromOutcomes(jsons),
-            ids=ExperimentOne.getIds(aug_sentences)
+            ids=ExperimentOne.getIds(aug_sentences),
+            method=''
         ))
 
     @classmethod
@@ -191,7 +196,8 @@ class ABSAModelRunner:
             seeds=arg.seeds,
             valset_ratio=arg.valset_ratio,
             outcomes=ExperimentOne.fromOutcomes(jsons),
-            ids=ExperimentOne.getIds(aug_sentences)
+            ids=ExperimentOne.getIds(aug_sentences),
+            method=''
         ))
 
 

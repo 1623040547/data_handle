@@ -9,12 +9,15 @@ from handle.my_template import MyTemplate
 from handle.template_handle import TemplateHandle
 from database.mysql.dataset.daset_data import ChatModel, Scene, Sentence
 
-json_s = open(r'C:\Users\16230\PycharmProjects\dataHandle\log\1706102828.4258492.json').read()
+# json_s = open(r'C:\Users\16230\PycharmProjects\dataHandle\log\1706102828.4258492.json').read()
+#
+# ExperimentCome = ExperimentCome.fromJson(json_s)
+#
+# dao = ExperimentDao()
+#
+# experiments = dao.getExperiments()
 
-ExperimentCome = ExperimentCome.fromJson(json_s)
-
-dao = ExperimentDao()
-dao.put(ExperimentCome)
+# dao.put(ExperimentCome)
 
 #
 # ProtHandle().parseAndSave(file=DatasetFile.laptop)
@@ -37,16 +40,16 @@ dao.put(ExperimentCome)
 # chat(model=ChatModel.chat_35_turbo, content='hello', template=MyTemplate.t1)
 
 
-# def one_thread():
-#     handle = TemplateHandle(scene=Scene.restaurant, model=ChatModel.chat_35_turbo, template=MyTemplate.t1,
-#                             turn=1, batch_size=50)
-#     handle.run(proto_model=ChatModel.none)
-#
-#     handle = TemplateHandle(scene=Scene.laptop, model=ChatModel.chat_35_turbo, template=MyTemplate.t1,
-#                             turn=1, batch_size=50)
-#     handle.run(proto_model=ChatModel.none)
-#
-#
+def one_thread():
+    handle = TemplateHandle(scene=Scene.restaurant, model=ChatModel.chat_35_turbo, template=MyTemplate.t1,
+                            turn=1, batch_size=5)
+    handle.run(proto_model=ChatModel.none)
+
+    handle = TemplateHandle(scene=Scene.laptop, model=ChatModel.chat_35_turbo, template=MyTemplate.t1,
+                            turn=1, batch_size=5)
+    handle.run(proto_model=ChatModel.none)
+
+
 # def two_thread():
 #     handle = TemplateHandle(scene=Scene.restaurant, model=ChatModel.chat_glm_turbo, template=MyTemplate.t1,
 #                             turn=1, batch_size=5)
@@ -57,8 +60,6 @@ dao.put(ExperimentCome)
 #     handle.run(proto_model=ChatModel.none)
 #
 #
-# if __name__ == '__main__':
-#     for i in range(5):
-#         two_thread()
-#     for i in range(5):
-#         one_thread()
+if __name__ == '__main__':
+    for i in range(5):
+        one_thread()

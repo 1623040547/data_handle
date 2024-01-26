@@ -20,7 +20,8 @@ class Table:
     bs int(8),
     patience int(8),
     valset_ratio float(9,8),
-    ids LONGBLOB
+    ids LONGBLOB,
+    method varchar(512)
     )
 """
     outcome = TableName.outcome + """(
@@ -67,8 +68,8 @@ class Experiment:
         print(experiment.fromIds(experiment.toIds()))
         return _db.insert(
             TableName.experiment + '(`id`,`absa_model`,`dataset`,`learning_rate`,`dropout_rate`,`n_epoch`,`bs`,'
-            + '`patience`,`valset_ratio`,`ids`)',
-            '\'{0}\',\'{1}\',\'{2}\',{3},{4},{5},{6},{7},{8},\'{9}\''.format(
+            + '`patience`,`valset_ratio`,`ids`,`method`)',
+            '\'{0}\',\'{1}\',\'{2}\',{3},{4},{5},{6},{7},{8},\'{9}\',\'{10}\''.format(
                 experiment.id,
                 experiment.absa_model,
                 experiment.dataset,
@@ -79,6 +80,7 @@ class Experiment:
                 experiment.patience,
                 experiment.valset_ratio,
                 experiment.toIds(),
+                experiment.method,
             )
         ) > 0
 
@@ -99,3 +101,45 @@ class Experiment:
                               experimentId,
                           )
                           ) > 0
+
+    @classmethod
+    def __get_outcomes(cls, experimentId: str):
+        outcomes = []
+        datas = _db.select(table=TableName.outcome, sel='seed,test_acc,test_f1,epoch',
+                           condition='experimentId = \'{0}\''.format(experimentId))
+        for data in datas:
+            outcome = ExperimentOne(
+                seed=data[0],
+                test_acc=data[1],
+                test_f1=data[2],
+                epoch=data[3],
+            )
+            outcomes.append(outcome)
+        return outcomes
+
+    @classmethod
+    def get_experiments(cls):
+        experiments = []
+        datas = _db.select(table=TableName.experiment, sel='id,absa_model,dataset,learning_rate,dropout_rate,'
+                                                           'n_epoch,bs,patience,valset_ratio,ids,method',
+                           condition='id != \'\'')
+        for data in datas:
+            outcomes = cls.__get_outcomes(data[0])
+            seeds = [a.seed for a in outcomes]
+            experiment = ExperimentCome(
+                id=data[0],
+                absa_model=data[1],
+                dataset=data[2],
+                learning_rate=data[3],
+                dropout_rate=data[4],
+                n_epoch=data[5],
+                bs=data[6],
+                patience=data[7],
+                valset_ratio=data[8],
+                ids=ExperimentCome.fromIds(data[9]),
+                seeds=seeds,
+                outcomes=outcomes,
+                method=data[10]
+            )
+            experiments.append(experiment)
+            return experiment

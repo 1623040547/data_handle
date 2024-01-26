@@ -9,13 +9,13 @@ MAX_SIZE = 1024 * 1024 * 1024
 
 
 class Database:
-    db = None
+    db = {}
 
     def __init__(self, db: str):
-        if Database.db is not None:
-            Database.db.__close(self)
+        if Database.db.__contains__(db):
+            Database.db[db].__close(self)
         else:
-            Database.db = self
+            Database.db[db] = self
         self.db = db
         self.con = pymysql.connect(host=host, user=user, passwd=psd, port=port)
         self.cursor = self.con.cursor()
@@ -31,7 +31,7 @@ class Database:
         self.cursor = self.con.cursor()
 
     def __close(self, new_db):
-        Database.db = new_db
+        Database.db[self.db] = new_db
         self.cursor.close()
         self.con.close()
         del self

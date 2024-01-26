@@ -66,6 +66,7 @@ class ExperimentCome:
     seeds: [int]
     valset_ratio: float
     ids: [int]
+    method: str
     outcomes: list[ExperimentOne]
 
     def toIds(self):
@@ -77,11 +78,11 @@ class ExperimentCome:
         return ids
 
     @classmethod
-    def fromIds(cls, zip_str: str):
-        args = zip_str.split(' ')
+    def fromIds(cls, zip_str: bytes):
+        args = zip_str.decode('utf-8').split(' ')
         zip_str = int.to_bytes(int(args[1]), int(args[0]), 'big')
         decompressed_data = bz2.decompress(zip_str)
-        return decompressed_data.decode('utf-8')
+        return [int(x) for x in decompressed_data.decode('utf-8').split(',')]
 
     @classmethod
     def fromJson(cls, jsons: str):
@@ -98,7 +99,8 @@ class ExperimentCome:
             seeds=jsons['seeds'],
             valset_ratio=jsons['valset_ratio'],
             ids=jsons['ids'],
-            outcomes=ExperimentOne.fromOutcomes(json.dumps(jsons['outcomes']))
+            outcomes=ExperimentOne.fromOutcomes(json.dumps(jsons['outcomes'])),
+            method=''
         )
 
     def toJson(self):
@@ -113,6 +115,7 @@ class ExperimentCome:
         jsons['seeds'] = self.seeds
         jsons['valset_ratio'] = self.valset_ratio
         jsons['ids'] = self.ids
+        jsons['method'] = self.method
         jsons['outcomes'] = []
         for out in self.outcomes:
             jsons['outcomes'].append(out.toJson())

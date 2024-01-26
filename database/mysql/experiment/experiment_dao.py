@@ -13,3 +13,6 @@ class ExperimentDao:
     def puts(self, experiments: [ExperimentCome]):
         for experiment in experiments:
             self.put(experiment)
+
+    def getExperiments(self):
+        return Experiment.get_experiments()
