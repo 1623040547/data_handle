@@ -9,7 +9,7 @@ def chat_glm_turbo(content, template=''):
         prompt=[
             {"role": "user", "content": template},
             {"role": "assistant",
-             "content": 'yes'},
+             "content": 'Please provide your original sentences and the corresponding keywords, and I will generate the rewritten sentences accordingly.'},
             {"role": "user", "content": content},
         ],
     )

@@ -16,12 +16,9 @@ class Llama:
 
         payload = json.dumps({
             "messages": [
-                {
-                    {"role": "user", "content": template},
-                    {"role": "assistant",
-                     "content": 'yes'},
-                    {"role": "user", "content": content},
-                }
+                {"role": "user", "content": template},
+                {"role": "assistant", "content": "Please provide your original sentences and the corresponding keywords, and I will generate the rewritten sentences accordingly."},
+                {"role": "user", "content": content},
             ]
         })
         headers = {

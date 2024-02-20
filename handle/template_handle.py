@@ -16,12 +16,12 @@ class TemplateHandle:
         self.retry_time = retry_time
         self.dao = DataSetDao()
 
-    def run(self, proto_model: ChatModel):
+    def run(self):
         for i in range(0, self.turn):
             print('turn: ', i)
             _Count.invalidCount = 0
             _Count.validCount = 0
-            sentences = self.dao.getSentences(self.scene.value.__str__(), proto_model.value.__str__())
+            sentences = self.dao.getSentences(self.scene.value.__str__(), "")
             random.shuffle(sentences)
             count = 0
             for j in range(0, int(len(sentences) / self.batch_size + 1)):

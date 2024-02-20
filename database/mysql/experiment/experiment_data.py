@@ -3,6 +3,8 @@ import json
 import zlib
 from dataclasses import dataclass
 
+import numpy as np
+
 from database.mysql.dataset.daset_data import Sentence
 
 
@@ -57,6 +59,7 @@ class ExperimentOne:
 class ExperimentCome:
     id: str
     absa_model: str  # kgan atae aen
+    chat_model: str
     dataset: str  # laptop restaurant
     learning_rate: float
     dropout_rate: float
@@ -69,6 +72,42 @@ class ExperimentCome:
     method: str
     outcomes: list[ExperimentOne]
 
+    def acc(self):
+        acc = 0
+        for o in self.outcomes:
+            acc += o.test_acc
+        return acc / len(self.outcomes)
+
+    def f1(self):
+        f1 = 0
+        for o in self.outcomes:
+            f1 += o.test_f1
+        return f1 / len(self.outcomes)
+
+    def best_acc(self):
+        best_acc = 0
+        for o in self.outcomes:
+            best_acc = max(best_acc, o.test_acc)
+        return best_acc
+
+    def best_f1(self):
+        best_f1 = 0
+        for o in self.outcomes:
+            best_f1 = max(best_f1, o.test_f1)
+        return best_f1
+
+    def acc_var(self):
+        a = []
+        for o in self.outcomes:
+            a.append(o.test_acc)
+        return np.var(a)
+
+    def f1_var(self):
+        a = []
+        for o in self.outcomes:
+            a.append(o.test_f1)
+        return np.var(a)
+
     def toIds(self):
         source = ','.join([str(x) for x in self.ids])
         ids = bz2.compress(bytes(source, 'utf-8'))
@@ -79,16 +118,23 @@ class ExperimentCome:
 
     @classmethod
     def fromIds(cls, zip_str: bytes):
-        args = zip_str.decode('utf-8').split(' ')
-        zip_str = int.to_bytes(int(args[1]), int(args[0]), 'big')
-        decompressed_data = bz2.decompress(zip_str)
-        return [int(x) for x in decompressed_data.decode('utf-8').split(',')]
+        return []
+        pass
+        # args = zip_str.decode('utf-8').split(' ')
+        # print(int(args[1]))
+        # zip_str = int.to_bytes(int(args[1]), int(args[0]), 'big')
+        # decompressed_data = bz2.decompress(zip_str)
+        # return [int(x) for x in decompressed_data.decode('utf-8').split(',')]
 
     @classmethod
-    def fromJson(cls, jsons: str):
+    def fromJson(cls, jsons: str, tid: float):
         jsons = json.loads(jsons)
+        try:
+            print('guideLine: ' + str(jsons['guideLine']))
+        except:
+            pass
         return ExperimentCome(
-            id=jsons['id'],
+            id=str(tid),
             absa_model=jsons['absa_model'],
             dataset=jsons['dataset'],
             learning_rate=jsons['learning_rate'],
@@ -100,7 +146,8 @@ class ExperimentCome:
             valset_ratio=jsons['valset_ratio'],
             ids=jsons['ids'],
             outcomes=ExperimentOne.fromOutcomes(json.dumps(jsons['outcomes'])),
-            method=''
+            chat_model=jsons['chat_model'],
+            method=jsons['method']
         )
 
     def toJson(self):
@@ -116,6 +163,7 @@ class ExperimentCome:
         jsons['valset_ratio'] = self.valset_ratio
         jsons['ids'] = self.ids
         jsons['method'] = self.method
+        jsons['chat_model'] = self.chat_model
         jsons['outcomes'] = []
         for out in self.outcomes:
             jsons['outcomes'].append(out.toJson())

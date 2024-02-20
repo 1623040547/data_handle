@@ -17,7 +17,7 @@ def chat_35_turbo(content, template: str):
             {"role": "user",
              "content": template},
             {"role": "assistant",
-             "content": 'yes'},
+             "content": 'Please provide your original sentences and the corresponding keywords, and I will generate the rewritten sentences accordingly.'},
             {"role": "user", "content": content},
         ],
     )

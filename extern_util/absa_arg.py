@@ -21,8 +21,8 @@ class ABSAModelArg:
     atae_lstm_command = ('C:\\Users\\16230\\Desktop\\ABSA-PyTorch-master\\venv\\Scripts\\python.exe '
                          'C:\\Users\\16230\\Desktop\\ABSA-PyTorch-master\\extern_util\\atae_lstm_inter.py')
 
-    aen_bert_command = (r'C:\Users\16230\Desktop\ABSA-PyTorch-master\venv\Scripts\python.exe '
-                        r'C:\Users\16230\Desktop\ABSA-PyTorch-master\extern_util\aen_bert_inter.py')
+    mem_command = (r'C:\Users\16230\Desktop\ABSA-PyTorch-master\venv\Scripts\python.exe '
+                        r'C:\Users\16230\Desktop\ABSA-PyTorch-master\extern_util\mem_inter.py')
 
     def run(self):
         cmd = self.command + (

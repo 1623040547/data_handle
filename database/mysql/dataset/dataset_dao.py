@@ -26,6 +26,7 @@ class DataSetDao:
 
     def getSentences(self, scene: str, model: str):
         sens = DataSet.selectSentence(model=model, scene=scene)
-        from extern_util.train_data_gen import deleteCh
-        deleteCh(sens)
+        from extern_util.train_data_gen import delete_ch
+        delete_ch(sens)
+       # twice_filter(sens)
         return sens

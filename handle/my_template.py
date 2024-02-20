@@ -1,6 +1,6 @@
 from enum import Enum
 
-from handle.template_data import template1
+from handle.template_data import template1, template2
 from database.mysql.dataset.daset_data import Sentence
 from database.mysql.dataset.dataset_dao import DataSetDao
 
@@ -12,6 +12,7 @@ class _Count:
 
 class MyTemplate(Enum):
     t1 = template1
+    t2 = template2
 
     @classmethod
     def genInputText(cls, template: Enum, sentences: list[Sentence]):
@@ -22,7 +23,14 @@ class MyTemplate(Enum):
                 for aspect_polarity in sentence.aspect_polarity:
                     aspects += '\'' + aspect_polarity.aspect + '\'' + ','
                 aspects = aspects.rstrip(',')
-                text += '{0}.{1} {2}\n'.format(i + 1, sentence.text, 'rewrite and include the words ' + aspects + '.')
+                text += '{0}.{1} {2}\n'.format(i + 1, sentence.text, '   rewrite and include the words ' + aspects + '.')
+        if template == MyTemplate.t2:
+            for i, sentence in enumerate(sentences):
+                aspects = ''
+                for aspect_polarity in sentence.aspect_polarity:
+                    aspects += '\'' + aspect_polarity.aspect + '\'' + ','
+                aspects = aspects.rstrip(',')
+                text += '{0}.{1} {2}\n'.format(i + 1, sentence.text, '   rewrite and include the words ' + aspects + '.')
         return text
 
     @classmethod
@@ -63,17 +71,17 @@ class MyTemplate(Enum):
         sentence.protId = proto.sentenceId
         sentence.model = model
         sentence.protText = proto.text
-        valid &= len(aspects) == len(proto.aspect_polarity)
-        for aspect in aspects:
-            asp = proto.getAspectPolarity(aspect)
-            # 判断方面词与原词是否保持一致
-            if asp is not None:
-                sentence.aspect_polarity.append(asp)
-            else:
-                valid &= False
-            # 判断方面词石佛还存在于改写文本中
-            if not text.lower().__contains__(aspect.lower()):
-                valid &= False
+        # valid &= len(aspects) == len(proto.aspect_polarity)
+        # for aspect in aspects:
+        #     asp = proto.getAspectPolarity(aspect)
+        #     # 判断方面词与原词是否保持一致
+        #     if asp is not None:
+        #         sentence.aspect_polarity.append(asp)
+        #     else:
+        #         valid &= False
+        #     # 判断方面词石佛还存在于改写文本中
+        #     if not text.lower().__contains__(aspect.lower()):
+        #         valid &= False
         print(sentence.text + '  ' + str(aspects))
         if valid:
             _Count.validCount += 1

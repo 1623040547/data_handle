@@ -21,7 +21,8 @@ class Table:
     patience int(8),
     valset_ratio float(9,8),
     ids LONGBLOB,
-    method varchar(512)
+    method varchar(512),
+    chat_model varchar(256)
     )
 """
     outcome = TableName.outcome + """(
@@ -63,13 +64,10 @@ class Experiment:
 
     @classmethod
     def __save_experiment(cls, experiment: ExperimentCome):
-        print(experiment.ids)
-        print(experiment.toIds())
-        print(experiment.fromIds(experiment.toIds()))
         return _db.insert(
             TableName.experiment + '(`id`,`absa_model`,`dataset`,`learning_rate`,`dropout_rate`,`n_epoch`,`bs`,'
-            + '`patience`,`valset_ratio`,`ids`,`method`)',
-            '\'{0}\',\'{1}\',\'{2}\',{3},{4},{5},{6},{7},{8},\'{9}\',\'{10}\''.format(
+            + '`patience`,`valset_ratio`,`ids`,`method`,`chat_model`)',
+            '\'{0}\',\'{1}\',\'{2}\',{3},{4},{5},{6},{7},{8},\'{9}\',\'{10}\',\'{11}\''.format(
                 experiment.id,
                 experiment.absa_model,
                 experiment.dataset,
@@ -81,16 +79,12 @@ class Experiment:
                 experiment.valset_ratio,
                 experiment.toIds(),
                 experiment.method,
+                experiment.chat_model,
             )
         ) > 0
 
     @classmethod
     def __save_outcome(cls, outcome: ExperimentOne, experimentId: str):
-        print(outcome.test_acc)
-        print(outcome.test_f1)
-        print(outcome.epoch)
-        print(outcome.seed)
-        print(experimentId)
         return _db.insert(TableName.outcome + '(`seed`,`test_acc`,`test_f1`,`epoch`,`experimentId`)',
                           '{0},{1},{2},{3},\'{4}\''
                           .format(
@@ -121,7 +115,7 @@ class Experiment:
     def get_experiments(cls):
         experiments = []
         datas = _db.select(table=TableName.experiment, sel='id,absa_model,dataset,learning_rate,dropout_rate,'
-                                                           'n_epoch,bs,patience,valset_ratio,ids,method',
+                                                           'n_epoch,bs,patience,valset_ratio,ids,method,chat_model',
                            condition='id != \'\'')
         for data in datas:
             outcomes = cls.__get_outcomes(data[0])
@@ -139,7 +133,15 @@ class Experiment:
                 ids=ExperimentCome.fromIds(data[9]),
                 seeds=seeds,
                 outcomes=outcomes,
-                method=data[10]
+                method=data[10],
+                chat_model=data[11]
             )
             experiments.append(experiment)
-            return experiment
+        return experiments
+
+    @classmethod
+    def experiment_exist(cls,method:str,chat_model:str,scene:str):
+        datas = _db.select(table=TableName.experiment, sel='id,absa_model,dataset,learning_rate,dropout_rate,'
+                                                           'n_epoch,bs,patience,valset_ratio,ids,method,chat_model',
+                           condition='method = \'{0}\' and chat_model = \'{1}\' and scene = \'{2}\''.format(method, chat_model,scene))
+        return len(datas) > 0
