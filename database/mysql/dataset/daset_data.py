@@ -56,9 +56,6 @@ class Sentence:
             asp.append(aspect_p.aspect)
         return asp
 
-
-
-
     @classmethod
     def sentence(cls):
         return Sentence(
@@ -85,6 +82,7 @@ class Polarity(Enum):
 class Scene(Enum):
     restaurant = 'restaurant'
     laptop = 'laptop'
+    # twitter = 'twitter'
 
 
 class ChatModel(Enum):

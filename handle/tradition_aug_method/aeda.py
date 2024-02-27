@@ -45,13 +45,13 @@ def aeda(sentence,
 
 def aeda_gen_data():
     dao = DataSetDao()
-    ls = dao.getSentences(scene=Scene.laptop.name, model='')
-    rs = dao.getSentences(scene=Scene.restaurant.name, model='')
+    ls = dao.getSentences(scene=Scene.twitter.name, model='')
+    # rs = dao.getSentences(scene=Scene.restaurant.name, model='')
     count = 0
     for x in ls:
         print(count)
         count += 1
-        for i in range(4):
+        for i in range(3):
             s = aeda(x.text)
             dao.put(Sentence(
                 scene=x.scene,
@@ -64,18 +64,18 @@ def aeda_gen_data():
                 protText=x.text,
                 sentenceId=0,
             ))
-    for x in rs:
-        for i in range(4):
-            s = aeda(x.text)
-            dao.put(Sentence(
-                scene=x.scene,
-                text=s,
-                protId=x.sentenceId,
-                model='aeda',
-                aspect_polarity=x.aspect_polarity,
-                prompt=x.prompt,
-                promptId=x.promptId,
-                protText=x.text,
-                sentenceId=0,
-            ))
+    # for x in rs:
+    #     for i in range(4):
+    #         s = aeda(x.text)
+    #         dao.put(Sentence(
+    #             scene=x.scene,
+    #             text=s,
+    #             protId=x.sentenceId,
+    #             model='aeda',
+    #             aspect_polarity=x.aspect_polarity,
+    #             prompt=x.prompt,
+    #             promptId=x.promptId,
+    #             protText=x.text,
+    #             sentenceId=0,
+    #         ))
     dao.save()

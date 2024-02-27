@@ -8,7 +8,7 @@ from database.mysql.dataset.daset_data import Sentence, Scene, ChatModel
 from nltk.translate.bleu_score import sentence_bleu
 
 from database.mysql.dataset.dataset_dao import DataSetDao
-from extern_util.interface import start_experiment
+from extern_util.interface import start_experiment_atae, start_experiment_mem
 
 
 class BleuSelect:
@@ -102,6 +102,9 @@ def bleu_select_sample(step=0.2):
     for di, de in enumerate(Scene):
         scene = de.value
         prot_sentences = dao.getSentences(scene=scene, model="")
+        prot_map = {}
+        for p in prot_sentences:
+            prot_map[p.sentenceId] = p
         # start_experiment(
         #     scene=scene,
         #     sentences=[],
@@ -112,13 +115,16 @@ def bleu_select_sample(step=0.2):
         for ci, ce in enumerate(ChatModel):
             model = ce.value
             aug_sentences.extend(dao.getSentences(scene=scene, model=model))
+        for s in aug_sentences:
+            if len(s.aspect_polarity) == 0:
+                s.aspect_polarity = prot_map[s.protId].aspect_polarity
         model = 'complex'
         guideLine = 0
         while guideLine <= 1:
-            print("guideLine: " +str(guideLine))
+            print("guideLine: " + str(guideLine))
             bleu_sel = BleuSelect(aug_sentences, prot_sentences, 0.25, 2, guideLine)
             while bleu_sel.forward(BleuSelect.method_1_sample):
-                start_experiment(
+                start_experiment_atae(
                     scene=scene,
                     sentences=bleu_sel.outcomes,
                     chat_model=model,
@@ -126,3 +132,73 @@ def bleu_select_sample(step=0.2):
                 )
                 print("epoch: " + str(bleu_sel.epoch_i))
             guideLine += step
+
+
+def bleu_select_atae(guide=0.2):
+    dao = DataSetDao()
+    for di, de in enumerate(Scene):
+        scene = de.value
+        prot_sentences = dao.getSentences(scene=scene, model="")
+        prot_map = {}
+        for p in prot_sentences:
+            prot_map[p.sentenceId] = p
+        # start_experiment(
+        #     scene=scene,
+        #     sentences=[],
+        #     chat_model="",
+        #     method=BleuSelect.method_1_sample,
+        # )
+        aug_sentences = []
+        for ci, ce in enumerate(ChatModel):
+            model = ce.value
+            aug_sentences.extend(dao.getSentences(scene=scene, model=model))
+        for s in aug_sentences:
+            if len(s.aspect_polarity) == 0:
+                s.aspect_polarity = prot_map[s.protId].aspect_polarity
+        model = 'complex_' + str(guide)
+        guideLine = guide
+        print("guideLine: " + str(guideLine))
+        bleu_sel = BleuSelect(aug_sentences, prot_sentences, 0.2, 10, guideLine)
+        while bleu_sel.forward(BleuSelect.method_1):
+            start_experiment_atae(
+                scene=scene,
+                sentences=bleu_sel.outcomes,
+                chat_model=model,
+                method=bleu_sel.method_1,
+            )
+            print("epoch: " + str(bleu_sel.epoch_i))
+
+
+def bleu_select_mem(guide=0.2):
+    dao = DataSetDao()
+    for di, de in enumerate(Scene):
+        scene = de.value
+        prot_sentences = dao.getSentences(scene=scene, model="")
+        prot_map = {}
+        for p in prot_sentences:
+            prot_map[p.sentenceId] = p
+        # start_experiment(
+        #     scene=scene,
+        #     sentences=[],
+        #     chat_model="",
+        #     method=BleuSelect.method_1_sample,
+        # )
+        aug_sentences = []
+        for ci, ce in enumerate(ChatModel):
+            model = ce.value
+            aug_sentences.extend(dao.getSentences(scene=scene, model=model))
+        for s in aug_sentences:
+            if len(s.aspect_polarity) == 0:
+                s.aspect_polarity = prot_map[s.protId].aspect_polarity
+        model = 'complex_' + str(guide)
+        guideLine = guide
+        print("guideLine: " + str(guideLine))
+        bleu_sel = BleuSelect(aug_sentences, prot_sentences, 0.2, 10, guideLine)
+        while bleu_sel.forward(BleuSelect.method_1):
+            start_experiment_mem(
+                scene=scene,
+                sentences=bleu_sel.outcomes,
+                chat_model=model,
+                method=bleu_sel.method_1,
+            )
+            print("epoch: " + str(bleu_sel.epoch_i))

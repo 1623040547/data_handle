@@ -1,4 +1,3 @@
-
 from database.mysql.dataset.dataset_table import DataSet
 from database.mysql.dataset.daset_data import Sentence
 
@@ -12,7 +11,10 @@ class DataSetDao:
         DataSet.saveSentence(sentence)
 
     def puts(self, sentences: [Sentence]):
+        count = 0
         for sentence in sentences:
+            count += 1
+            print(count)
             self.put(sentence)
 
     def putInvalid(self, sentence: Sentence, aspects: [str]):
@@ -28,5 +30,5 @@ class DataSetDao:
         sens = DataSet.selectSentence(model=model, scene=scene)
         from extern_util.train_data_gen import delete_ch
         delete_ch(sens)
-       # twice_filter(sens)
+        # twice_filter(sens)
         return sens

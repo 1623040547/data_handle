@@ -182,13 +182,13 @@ def add_word(new_words):
 def eda_gen_data():
     print('eda_gen_data')
     dao = DataSetDao()
-    ls = dao.getSentences(scene=Scene.laptop.name, model='')
-    rs = dao.getSentences(scene=Scene.restaurant.name, model='')
+    ls = dao.getSentences(scene=Scene.twitter.name, model='')
+    # rs = dao.getSentences(scene=Scene.restaurant.name, model='')
     count = 0
     for x in ls:
         print(count)
         count += 1
-        sentences = eda(x.text, num_aug=4)
+        sentences = eda(x.text, num_aug=3)
         for s in sentences:
             dao.put(Sentence(
                 scene=x.scene,
@@ -201,20 +201,20 @@ def eda_gen_data():
                 protText=x.text,
                 sentenceId=0,
             ))
-    for x in rs:
-        sentences = eda(x.text)
-        for s in sentences:
-            dao.put(Sentence(
-                scene=x.scene,
-                text=s,
-                protId=x.sentenceId,
-                model='eda',
-                aspect_polarity=x.aspect_polarity,
-                prompt=x.prompt,
-                promptId=x.promptId,
-                protText=x.text,
-                sentenceId=0,
-            ))
+    # for x in rs:
+    #     sentences = eda(x.text)
+    #     for s in sentences:
+    #         dao.put(Sentence(
+    #             scene=x.scene,
+    #             text=s,
+    #             protId=x.sentenceId,
+    #             model='eda',
+    #             aspect_polarity=x.aspect_polarity,
+    #             prompt=x.prompt,
+    #             promptId=x.promptId,
+    #             protText=x.text,
+    #             sentenceId=0,
+    #         ))
     dao.save()
 
 

@@ -14,6 +14,7 @@ def train_for_aen_atae(sentences: [Sentence], path: str):
     throw_count = 0
     save_count = 0
     train_text = ''
+    print('train_for_aen_atae {0}'.format(len(sentences)))
     for sentence in sentences:
         parse_text = parse_word(sentence.text)  # parse_text设定为只读
         if not ['.', '?', '!', ' '].__contains__(parse_text[len(parse_text) - 1]):
@@ -56,6 +57,8 @@ def train_for_aen_atae(sentences: [Sentence], path: str):
     file.write(train_text)
     if len(sentences) == 0:
         return
+    print(throw_count)
+    print(save_count)
     print('throw count: {0}, save count: {1}, throw ratio: {2}'.format(throw_count, save_count,
                                                                        throw_count / (throw_count + save_count)))
     return throw_count, save_count

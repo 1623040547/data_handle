@@ -10,18 +10,17 @@ from database.mysql.experiment.experiment_dao import ExperimentDao
 from database.mysql.experiment.experiment_data import ExperimentCome
 from extern_util.interface import ABSAModelRunner
 from handle.data_gen.model.chat import chat
-from handle.method.bleu_select import bleu_select_sample
+from handle.method.bleu_select import bleu_select_sample, bleu_select_atae, bleu_select_mem
 from handle.method.random_select import random_select, RandomSelect, random_select_2, random_select_3, \
-    random_select_eda, random_select_aeda
+    random_select_eda, random_select_aeda, random_select_mem
 from handle.my_template import MyTemplate
-from handle.prot_handle import DatasetFile
+from handle.prot_handle import DatasetFile, ProtHandle
 from handle.template_handle import TemplateHandle
 from database.mysql.dataset.daset_data import ChatModel, Scene, Sentence
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 from handle.tradition_aug_method.aeda import aeda_gen_data
 from handle.tradition_aug_method.eda import eda_gen_data
-
 
 # def outcome_write_to_db(path: str):
 #     for file in os.listdir(path):
@@ -36,10 +35,10 @@ from handle.tradition_aug_method.eda import eda_gen_data
 #
 #
 # def bleu_test():
-#     for file in os.listdir(r'C:\Users\16230\PycharmProjects\dataHandle\log\log_mem_bleu_test_rest'):
+#     for file in os.listdir(r'C:\Users\16230\PycharmProjects\dataHandle\log\bleu_test'):
 #         try:
 #             t = float(file.replace('.json', ''))
-#             f = r'C:\Users\16230\PycharmProjects\dataHandle\log\log_mem_bleu_test_rest' + '\\' + file
+#             f = r'C:\Users\16230\PycharmProjects\dataHandle\log\bleu_test' + '\\' + file
 #             come = ExperimentCome.fromJson(open(f).read(), tid=t)
 #             print(come.method)
 #             print('acc: ' + str(come.acc()))
@@ -53,32 +52,11 @@ from handle.tradition_aug_method.eda import eda_gen_data
 
 
 # eda_gen_data()
-#
-# aeda_gen_data()
+
 
 # bleu_test()
 
-# handle = TemplateHandle(scene=Scene.laptop, model=ChatModel.chat_glm_turbo, template=MyTemplate.t1, turn=4)
-#
-# handle.run()
-#
-# handle = TemplateHandle(scene=Scene.restaurant, model=ChatModel.chat_glm_turbo, template=MyTemplate.t1, turn=4)
-#
-# handle.run()
-#
-# handle = TemplateHandle(scene=Scene.laptop, model=ChatModel.llama_70_chat, template=MyTemplate.t1, turn=4)
-#
-# handle.run()
-#
-# handle = TemplateHandle(scene=Scene.restaurant, model=ChatModel.llama_70_chat, template=MyTemplate.t1, turn=4)
-#
-# handle.run()
-#
-# handle = TemplateHandle(scene=Scene.laptop, model=ChatModel.chat_35_turbo, template=MyTemplate.t1, turn=4)
-#
-# handle.run()
-#
-# handle = TemplateHandle(scene=Scene.restaurant, model=ChatModel.chat_35_turbo, template=MyTemplate.t1, turn=4)
+# handle = TemplateHandle(scene=Scene.twitter, model=ChatModel.chat_glm_turbo, template=MyTemplate.t1, turn=2)
 #
 # handle.run()
 
@@ -86,9 +64,11 @@ from handle.tradition_aug_method.eda import eda_gen_data
 # outcome_write_to_db(r'C:\Users\16230\Desktop\log3')
 # outcome_write_to_db(r'C:\Users\16230\PycharmProjects\dataHandle\log')
 
-random_select_eda()
+# ProtHandle().parseTwitterAndSave(DatasetFile.twitter)
 
-random_select_aeda()
+# random_select_eda()
+#
+# random_select_aeda()
 #
 # f_rest_n = f_rest_s.read() +
 
@@ -193,3 +173,22 @@ random_select_aeda()
 #
 # print()
 # print()
+
+# random_select(step=0.2, epoch=10)
+
+# random_select_mem(step=0.2, epoch=10)
+
+# random_select_eda(step=0.2)
+# random_select_aeda(step=0.2)
+
+bleu_select_atae(0.2)
+bleu_select_atae(0.5)
+bleu_select_atae(0.8)
+
+
+# atae rest 差2.25 2.5
+# random_select(step=2.25, epoch=1)
+# random_select(step=2.5, epoch=1)
+bleu_select_mem(0.2)  # 差0.2_0.2
+bleu_select_mem(0.5)
+bleu_select_mem(0.8)
