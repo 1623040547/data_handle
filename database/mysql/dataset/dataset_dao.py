@@ -14,7 +14,6 @@ class DataSetDao:
         count = 0
         for sentence in sentences:
             count += 1
-            print(count)
             self.put(sentence)
 
     def putInvalid(self, sentence: Sentence, aspects: [str]):

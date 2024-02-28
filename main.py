@@ -56,9 +56,9 @@ from handle.tradition_aug_method.eda import eda_gen_data
 
 # bleu_test()
 
-# handle = TemplateHandle(scene=Scene.twitter, model=ChatModel.chat_glm_turbo, template=MyTemplate.t1, turn=2)
-#
-# handle.run()
+handle = TemplateHandle(scene=Scene.laptop, model=ChatModel.chat_glm_turbo, template=MyTemplate.t1, turn=4)
+
+handle.run()
 
 
 # outcome_write_to_db(r'C:\Users\16230\Desktop\log3')
@@ -181,14 +181,14 @@ from handle.tradition_aug_method.eda import eda_gen_data
 # random_select_eda(step=0.2)
 # random_select_aeda(step=0.2)
 
-bleu_select_atae(0.2)
-bleu_select_atae(0.5)
-bleu_select_atae(0.8)
+# bleu_select_atae(0.2)
+# bleu_select_atae(0.5)
+# bleu_select_atae(0.8)
 
 
 # atae rest 差2.25 2.5
 # random_select(step=2.25, epoch=1)
 # random_select(step=2.5, epoch=1)
-bleu_select_mem(0.2)  # 差0.2_0.2
-bleu_select_mem(0.5)
-bleu_select_mem(0.8)
+# bleu_select_mem(0.2)  # 差0.2_0.2
+# bleu_select_mem(0.5)
+# bleu_select_mem(0.8)

@@ -74,15 +74,21 @@ class ExperimentCome:
 
     def acc(self):
         acc = 0
-        for o in self.outcomes:
-            acc += o.test_acc
-        return acc / len(self.outcomes)
+        outcomes = [o.test_acc for o in self.outcomes]
+        outcomes.sort(reverse=True)
+        outcomes = outcomes[0:4]
+        for o in outcomes:
+            acc += o
+        return acc / len(outcomes)
 
     def f1(self):
         f1 = 0
-        for o in self.outcomes:
-            f1 += o.test_f1
-        return f1 / len(self.outcomes)
+        outcomes = [o.test_f1 for o in self.outcomes]
+        outcomes.sort(reverse=True)
+        outcomes = outcomes[0:4]
+        for o in outcomes:
+            f1 += o
+        return f1 / len(outcomes)
 
     def best_acc(self):
         best_acc = 0
@@ -98,14 +104,20 @@ class ExperimentCome:
 
     def acc_var(self):
         a = []
-        for o in self.outcomes:
-            a.append(o.test_acc)
+        outcomes = [o.test_f1 for o in self.outcomes]
+        outcomes.sort(reverse=True)
+        outcomes = outcomes[0:4]
+        for o in outcomes:
+            a.append(o)
         return np.var(a)
 
     def f1_var(self):
         a = []
-        for o in self.outcomes:
-            a.append(o.test_f1)
+        outcomes = [o.test_f1 for o in self.outcomes]
+        outcomes.sort(reverse=True)
+        outcomes = outcomes[0:4]
+        for o in outcomes:
+            a.append(o)
         return np.var(a)
 
     def toIds(self):
