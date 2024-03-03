@@ -140,7 +140,9 @@ def bleu_select_atae(guide=0.2):
         scene = de.value
         prot_sentences = dao.getSentences(scene=scene, model="")
         prot_map = {}
+        l = 0
         for p in prot_sentences:
+            l +=  len(p.aspect_polarity)
             prot_map[p.sentenceId] = p
         # start_experiment(
         #     scene=scene,

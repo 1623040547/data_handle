@@ -17,6 +17,8 @@ def train_for_aen_atae(sentences: [Sentence], path: str):
     print('train_for_aen_atae {0}'.format(len(sentences)))
     for sentence in sentences:
         parse_text = parse_word(sentence.text)  # parse_text设定为只读
+        if len(parse_text) == 0:
+            continue
         if not ['.', '?', '!', ' '].__contains__(parse_text[len(parse_text) - 1]):
             parse_text += ' .'
         for aspect in sentence.aspect_polarity:

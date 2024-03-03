@@ -2,7 +2,9 @@ import os
 from enum import Enum
 import seaborn as sns
 import matplotlib.pyplot as plt
-from database.mysql.experiment.experiment_data import ExperimentCome
+from database.mysql.experiment.experiment_data import OutcomeMethod, ExperimentCome
+import scipy.stats as st
+import pandas as pd
 
 
 class Method(Enum):
@@ -25,9 +27,12 @@ class Experiment(Enum):
     chat_glm_turbo = "glm"
     chat_35_turbo = "gpt"
     llama_70_chat = "llama"
+    chat_glm_turbo_x = "glm_x"
+    chat_35_turbo_x = "gpt_x"
+    llama_70_chat_x = "llama_x"
 
 
-def draw_pic(method: Method, dataset: Dataset, experiments: [Experiment], desc: str):
+def draw_pic(method: Method, dataset: Dataset, experiments: [Experiment], m: OutcomeMethod):
     ###变量定义
     path = r'C:\Users\16230\PycharmProjects\dataHandle\log'
     colors = [
@@ -60,11 +65,11 @@ def draw_pic(method: Method, dataset: Dataset, experiments: [Experiment], desc: 
             t = float(f.replace('.json', ''))
             f = p + '\\' + f
             baseline = ExperimentCome.fromJson(open(f).read(), tid=t)
-            max_y = max(max_y, baseline.best_f1())
-            min_y = min(min_y, baseline.best_f1())
+            max_y = max(max_y, baseline.my_method(m))
+            min_y = min(min_y, baseline.my_method(m))
             break
     for e in experiments:
-        y = [baseline.best_f1()]
+        y = [baseline.my_method(m)]
         p = path + '\\' + method.value + '\\' + dataset.value + '\\' + e.value
         chat_model = ""
         for f in os.listdir(p):
@@ -72,7 +77,7 @@ def draw_pic(method: Method, dataset: Dataset, experiments: [Experiment], desc: 
             f = p + '\\' + f
             come = ExperimentCome.fromJson(open(f).read(), tid=t)
             chat_model = come.chat_model
-            acc = come.best_f1()
+            acc = come.my_method(m)
             y.append(acc)
             max_y = max(max_y, acc)
             min_y = min(min_y, acc)
@@ -87,8 +92,14 @@ def draw_pic(method: Method, dataset: Dataset, experiments: [Experiment], desc: 
     sns.set_style("whitegrid")  # 设置背景样式
 
     count = 0
-    for k, v in yy.items():
-        sns.lineplot(x=x, y=v, color=colors[count], linewidth=2.0, marker="o", markersize=8, markeredgecolor="white",
+    for k, y in yy.items():
+        # 线性拟合，可以返回斜率，截距，r 值，p 值，标准误差
+        slope, intercept, r_value, p_value, std_err = st.linregress(x, y)
+        new_y = []
+        for x_value in x:
+            new_y.append(slope * x_value + intercept)
+        sns.lineplot(x=x, y=new_y, color=colors[count], linewidth=2.0, marker="o", markersize=8,
+                     markeredgecolor="white",
                      markeredgewidth=1.5, label=k)
         count += 1
 
@@ -96,7 +107,7 @@ def draw_pic(method: Method, dataset: Dataset, experiments: [Experiment], desc: 
     # 添加标题和标签
     plt.title(title, fontweight='bold', fontsize=14)
     plt.xlabel("Ratio", fontsize=12)
-    plt.ylabel("F1 Best", fontsize=12)
+    plt.ylabel(m.value, fontsize=12)
 
     # 添加图例
     plt.legend(loc='upper left', frameon=True, fontsize=10)
@@ -105,16 +116,18 @@ def draw_pic(method: Method, dataset: Dataset, experiments: [Experiment], desc: 
     plt.xticks(fontsize=10)
     plt.yticks(fontsize=10)
     plt.xlim(0, max_x)
-    plt.ylim(min_y - 0.0005, max_y + 0.0005)
+    offset = (max_y - min_y) * 0.05
+    plt.ylim(min_y - offset, max_y + offset)
 
     # 设置坐标轴样式
     for spine in plt.gca().spines.values():
         spine.set_edgecolor("#CCCCCC")
         spine.set_linewidth(1.5)
 
-    plt.savefig(r'C:\Users\16230\PycharmProjects\dataHandle\pic\{0}_{1}.png'.format(title, desc), dpi=300,
+    plt.savefig(r'C:\Users\16230\PycharmProjects\dataHandle\pic\{0}_{1}.png'.format(m.value.replace(' ', '_'), title),
+                dpi=300,
                 bbox_inches='tight')
-    plt.figure()
+    plt.close()
     # # 显示图像
     # plt.show()
 
@@ -127,6 +140,14 @@ normal = [
     Experiment.llama_70_chat,
 ]
 
+normal_x = [
+    Experiment.eda,
+    Experiment.aeda,
+    Experiment.chat_glm_turbo_x,
+    Experiment.chat_35_turbo_x,
+    Experiment.llama_70_chat_x,
+]
+
 complex = [
     Experiment.eda,
     Experiment.aeda,
@@ -135,20 +156,34 @@ complex = [
     Experiment.complex_08,
 ]
 
-draw_pic(Method.ATAE_LSTM, Dataset.laptop, experiments=normal, desc='normal')
-draw_pic(Method.ATAE_LSTM, Dataset.laptop, experiments=complex, desc='complex')
+compare_llama = [
+    Experiment.llama_70_chat_x,
+    Experiment.llama_70_chat,
+]
 
-draw_pic(Method.ATAE_LSTM, Dataset.restaurant, experiments=normal, desc='normal')
-draw_pic(Method.ATAE_LSTM, Dataset.restaurant, experiments=complex, desc='complex')
+compare_gpt = [
+    Experiment.chat_35_turbo_x,
+    Experiment.chat_35_turbo,
+]
 
-draw_pic(Method.ATAE_LSTM, Dataset.twitter, experiments=normal, desc='normal')
-draw_pic(Method.ATAE_LSTM, Dataset.twitter, experiments=complex, desc='complex')
+compare_glm = [
+    Experiment.chat_glm_turbo,
+    Experiment.chat_glm_turbo_x,
+]
 
-draw_pic(Method.MemNet, Dataset.laptop, experiments=normal, desc='normal')
-draw_pic(Method.MemNet, Dataset.laptop, experiments=complex, desc='complex')
 
-draw_pic(Method.MemNet, Dataset.restaurant, experiments=normal, desc='normal')
-draw_pic(Method.MemNet, Dataset.restaurant, experiments=complex, desc='complex')
+def draw_pics(method: Method, dataset: Dataset, experiment):
+    draw_pic(method, dataset, experiments=experiment, m=OutcomeMethod.f1_var)
+    draw_pic(method, dataset, experiments=experiment, m=OutcomeMethod.f1)
+    draw_pic(method, dataset, experiments=experiment, m=OutcomeMethod.f1_best)
+    draw_pic(method, dataset, experiments=experiment, m=OutcomeMethod.acc)
+    draw_pic(method, dataset, experiments=experiment, m=OutcomeMethod.acc_var)
+    draw_pic(method, dataset, experiments=experiment, m=OutcomeMethod.acc_best)
 
-draw_pic(Method.MemNet, Dataset.twitter, experiments=normal, desc='normal')
-draw_pic(Method.MemNet, Dataset.twitter, experiments=complex, desc='complex')
+
+draw_pics(Method.MemNet, Dataset.restaurant, experiment=normal_x)
+draw_pics(Method.ATAE_LSTM, Dataset.restaurant, experiment=normal_x)
+draw_pics(Method.MemNet, Dataset.laptop, experiment=normal_x)
+draw_pics(Method.ATAE_LSTM, Dataset.laptop, experiment=normal_x)
+draw_pics(Method.MemNet, Dataset.twitter, experiment=normal_x)
+draw_pics(Method.ATAE_LSTM, Dataset.twitter, experiment=normal_x)

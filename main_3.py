@@ -5,3 +5,7 @@ from handle.template_handle import TemplateHandle
 handle = TemplateHandle(scene=Scene.laptop, model=ChatModel.chat_35_turbo, template=MyTemplate.t1, turn=4)
 
 handle.run()
+
+# handle = TemplateHandle(scene=Scene.restaurant, model=ChatModel.chat_35_turbo, template=MyTemplate.t1, turn=4)
+#
+# handle.run()

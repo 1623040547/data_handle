@@ -281,11 +281,11 @@ def saveExperiment(out: ExperimentCome):
 
 
 for_someone_atae = {
-    Scene.restaurant.name: [
-        # ABSAModelRunner.for_mem_rest,
-        ABSAModelRunner.for_atae_rest,
-        # ABSAModelRunner.for_kgan_rest, #效果不好
-    ],
+    # Scene.restaurant.name: [
+    #     # ABSAModelRunner.for_mem_rest,
+    #     ABSAModelRunner.for_atae_rest,
+    #     # ABSAModelRunner.for_kgan_rest, #效果不好
+    # ],
     Scene.laptop.value: [
         # ABSAModelRunner.for_mem_laptop,
         ABSAModelRunner.for_atae_laptop,
@@ -299,11 +299,11 @@ for_someone_atae = {
 }
 
 for_someone_mem = {
-    Scene.restaurant.name: [
-        ABSAModelRunner.for_mem_rest,
-        # ABSAModelRunner.for_atae_rest,
-        # ABSAModelRunner.for_kgan_rest, #效果不好
-    ],
+    # Scene.restaurant.name: [
+    #     ABSAModelRunner.for_mem_rest,
+    #     # ABSAModelRunner.for_atae_rest,
+    #     # ABSAModelRunner.for_kgan_rest, #效果不好
+    # ],
     Scene.laptop.value: [
         ABSAModelRunner.for_mem_laptop,
         # ABSAModelRunner.for_atae_laptop,
@@ -319,7 +319,7 @@ for_someone_mem = {
 
 def start_experiment_atae(scene: str, sentences: list[Sentence], chat_model: str, method: str):
     dao = ExperimentDao()
-    # get_experiments()
+    get_experiments()
     for function in for_someone_atae[scene]:
         if exist_experiment(chat_model, method):
             continue

@@ -1,7 +1,7 @@
 import bz2
 import json
-import zlib
 from dataclasses import dataclass
+from enum import Enum
 
 import numpy as np
 
@@ -55,6 +55,15 @@ class ExperimentOne:
         return ids
 
 
+class OutcomeMethod(Enum):
+    acc = "Avg Acc"
+    acc_best = "Best Acc"
+    acc_var = "Acc Var"
+    f1 = "Avg F1"
+    f1_best = "Best F1"
+    f1_var = "F1 Var"
+
+
 @dataclass()
 class ExperimentCome:
     id: str
@@ -72,11 +81,25 @@ class ExperimentCome:
     method: str
     outcomes: list[ExperimentOne]
 
+    def my_method(self, m: OutcomeMethod):
+        if m == OutcomeMethod.acc:
+            return self.acc()
+        elif m == OutcomeMethod.f1:
+            return self.f1()
+        elif m == OutcomeMethod.acc_best:
+            return self.best_acc()
+        elif m == OutcomeMethod.f1_best:
+            return self.best_f1()
+        elif m == OutcomeMethod.acc_var:
+            return self.acc_var()
+        elif m == OutcomeMethod.f1_var:
+            return self.f1_var()
+
     def acc(self):
         acc = 0
         outcomes = [o.test_acc for o in self.outcomes]
         outcomes.sort(reverse=True)
-        outcomes = outcomes[0:4]
+        outcomes = outcomes[1:7]
         for o in outcomes:
             acc += o
         return acc / len(outcomes)
@@ -85,7 +108,7 @@ class ExperimentCome:
         f1 = 0
         outcomes = [o.test_f1 for o in self.outcomes]
         outcomes.sort(reverse=True)
-        outcomes = outcomes[0:4]
+        outcomes = outcomes[1:7]
         for o in outcomes:
             f1 += o
         return f1 / len(outcomes)
@@ -106,7 +129,7 @@ class ExperimentCome:
         a = []
         outcomes = [o.test_f1 for o in self.outcomes]
         outcomes.sort(reverse=True)
-        outcomes = outcomes[0:4]
+        outcomes = outcomes[1:7]
         for o in outcomes:
             a.append(o)
         return np.var(a)
@@ -115,7 +138,7 @@ class ExperimentCome:
         a = []
         outcomes = [o.test_f1 for o in self.outcomes]
         outcomes.sort(reverse=True)
-        outcomes = outcomes[0:4]
+        outcomes = outcomes[1:7]
         for o in outcomes:
             a.append(o)
         return np.var(a)

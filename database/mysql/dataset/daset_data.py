@@ -80,12 +80,12 @@ class Polarity(Enum):
 
 
 class Scene(Enum):
-    restaurant = 'restaurant'
+    # restaurant = 'restaurant'
     laptop = 'laptop'
     # twitter = 'twitter'
 
 
 class ChatModel(Enum):
-    chat_35_turbo = 'gpt'
-    chat_glm_turbo = 'glm'
+    # chat_35_turbo = 'gpt'
+    # chat_glm_turbo = 'glm'
     llama_70_chat = 'llama'

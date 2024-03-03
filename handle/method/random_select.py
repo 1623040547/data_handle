@@ -38,6 +38,7 @@ class RandomSelect:
     def another(self):
         return self.map_keys[(self.at + 1) % 2]
 
+    # 继承上一次的随机shujiu
     def forward(self):
         if self.epoch_i >= self.epoch:
             return False
@@ -122,14 +123,16 @@ def random_select(step=0.25, epoch=10):
     for di, de in enumerate(Scene):
         scene = de.value
         prot_sentences = dao.getSentences(scene=scene, model="")
-        start_experiment_atae(
-            scene=scene,
-            sentences=[],
-            chat_model="",
-            method=RandomSelect.method_1,
-        )
+        # start_experiment_atae(
+        #     scene=scene,
+        #     sentences=[],
+        #     chat_model="",
+        #     method=RandomSelect.method_1,
+        # )
         prot_map = {}
+        l = 0
         for p in prot_sentences:
+            l += len(p.aspect_polarity)
             prot_map[p.sentenceId] = p
         for ci, ce in enumerate(ChatModel):
             model = ce.value
@@ -138,7 +141,7 @@ def random_select(step=0.25, epoch=10):
                 if len(s.aspect_polarity) == 0:
                     s.aspect_polarity = prot_map[s.protId].aspect_polarity
             print("random_select {0}".format(len(aug_sentences)))
-            ram_sel = RandomSelect(aug_sentences, len(prot_sentences), step, epoch)
+            ram_sel = RandomSelect(aug_sentences, l, step, epoch)
             while ram_sel.forward():
                 print("random_select forward {0}".format(len(ram_sel.outcomes)))
                 start_experiment_atae(
@@ -154,14 +157,16 @@ def random_select_mem(step=0.25, epoch=10):
     for di, de in enumerate(Scene):
         scene = de.value
         prot_sentences = dao.getSentences(scene=scene, model="")
-        start_experiment_mem(
-            scene=scene,
-            sentences=[],
-            chat_model="",
-            method=RandomSelect.method_1,
-        )
+        # start_experiment_mem(
+        #     scene=scene,
+        #     sentences=[],
+        #     chat_model="",
+        #     method=RandomSelect.method_1,
+        # )
         prot_map = {}
+        l = 0
         for p in prot_sentences:
+            l += len(p.aspect_polarity)
             prot_map[p.sentenceId] = p
         for ci, ce in enumerate(ChatModel):
             model = ce.value
@@ -170,14 +175,14 @@ def random_select_mem(step=0.25, epoch=10):
                 if len(s.aspect_polarity) == 0:
                     s.aspect_polarity = prot_map[s.protId].aspect_polarity
             print("random_select {0}".format(len(aug_sentences)))
-            ram_sel = RandomSelect(aug_sentences, len(prot_sentences), step, epoch)
-            while ram_sel.forward():
+            ram_sel = RandomSelect(aug_sentences, l, step, epoch)
+            while ram_sel.forward_2():
                 print("random_select forward {0}".format(len(ram_sel.outcomes)))
                 start_experiment_mem(
                     scene=scene,
                     sentences=ram_sel.outcomes,
                     chat_model=model,
-                    method=ram_sel.method_1,
+                    method=ram_sel.method_2,
                 )
 
 
