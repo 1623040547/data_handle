@@ -21,6 +21,7 @@ class Dataset(Enum):
 class Experiment(Enum):
     aeda = "aeda"
     eda = "eda"
+    complex = "complex"
     complex_02 = "complex_0.2"
     complex_05 = "complex_0.5"
     complex_08 = "complex_0.8"
@@ -93,12 +94,7 @@ def draw_pic(method: Method, dataset: Dataset, experiments: [Experiment], m: Out
 
     count = 0
     for k, y in yy.items():
-        # 线性拟合，可以返回斜率，截距，r 值，p 值，标准误差
-        slope, intercept, r_value, p_value, std_err = st.linregress(x, y)
-        new_y = []
-        for x_value in x:
-            new_y.append(slope * x_value + intercept)
-        sns.lineplot(x=x, y=new_y, color=colors[count], linewidth=2.0, marker="o", markersize=8,
+        sns.lineplot(x=x, y=y, color=colors[count], linewidth=2.0, marker="o", markersize=8,
                      markeredgecolor="white",
                      markeredgewidth=1.5, label=k)
         count += 1
@@ -149,13 +145,12 @@ normal_x = [
 ]
 
 complex = [
-    Experiment.eda,
-    Experiment.aeda,
+    Experiment.chat_35_turbo,
+    Experiment.complex,
     Experiment.complex_02,
     Experiment.complex_05,
     Experiment.complex_08,
 ]
-
 compare_llama = [
     Experiment.llama_70_chat_x,
     Experiment.llama_70_chat,
@@ -181,9 +176,9 @@ def draw_pics(method: Method, dataset: Dataset, experiment):
     draw_pic(method, dataset, experiments=experiment, m=OutcomeMethod.acc_best)
 
 
-draw_pics(Method.MemNet, Dataset.restaurant, experiment=normal_x)
-draw_pics(Method.ATAE_LSTM, Dataset.restaurant, experiment=normal_x)
-draw_pics(Method.MemNet, Dataset.laptop, experiment=normal_x)
-draw_pics(Method.ATAE_LSTM, Dataset.laptop, experiment=normal_x)
-draw_pics(Method.MemNet, Dataset.twitter, experiment=normal_x)
-draw_pics(Method.ATAE_LSTM, Dataset.twitter, experiment=normal_x)
+draw_pics(Method.MemNet, Dataset.restaurant, experiment=complex)
+draw_pics(Method.ATAE_LSTM, Dataset.restaurant, experiment=complex)
+draw_pics(Method.MemNet, Dataset.laptop, experiment=complex)
+draw_pics(Method.ATAE_LSTM, Dataset.laptop, experiment=complex)
+draw_pics(Method.MemNet, Dataset.twitter, experiment=complex)
+draw_pics(Method.ATAE_LSTM, Dataset.twitter, experiment=complex)

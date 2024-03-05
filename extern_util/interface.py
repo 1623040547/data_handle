@@ -281,39 +281,39 @@ def saveExperiment(out: ExperimentCome):
 
 
 for_someone_atae = {
-    # Scene.restaurant.name: [
-    #     # ABSAModelRunner.for_mem_rest,
-    #     ABSAModelRunner.for_atae_rest,
-    #     # ABSAModelRunner.for_kgan_rest, #效果不好
-    # ],
+    Scene.restaurant.name: [
+        # ABSAModelRunner.for_mem_rest,
+        ABSAModelRunner.for_atae_rest,
+        # ABSAModelRunner.for_kgan_rest, #效果不好
+    ],
     Scene.laptop.value: [
         # ABSAModelRunner.for_mem_laptop,
         ABSAModelRunner.for_atae_laptop,
         # ABSAModelRunner.for_kgan_laptop, #效果不好
     ],
-    # Scene.twitter.value: [
-    #     # ABSAModelRunner.for_mem_twitter,
-    #     ABSAModelRunner.for_atae_twitter,
-    #     # ABSAModelRunner.for_kgan_laptop, #效果不好
-    # ]
+    Scene.twitter.value: [
+        # ABSAModelRunner.for_mem_twitter,
+        ABSAModelRunner.for_atae_twitter,
+        # ABSAModelRunner.for_kgan_laptop, #效果不好
+    ]
 }
 
 for_someone_mem = {
-    # Scene.restaurant.name: [
-    #     ABSAModelRunner.for_mem_rest,
-    #     # ABSAModelRunner.for_atae_rest,
-    #     # ABSAModelRunner.for_kgan_rest, #效果不好
-    # ],
+    Scene.restaurant.name: [
+        ABSAModelRunner.for_mem_rest,
+        # ABSAModelRunner.for_atae_rest,
+        # ABSAModelRunner.for_kgan_rest, #效果不好
+    ],
     Scene.laptop.value: [
         ABSAModelRunner.for_mem_laptop,
         # ABSAModelRunner.for_atae_laptop,
         # ABSAModelRunner.for_kgan_laptop, #效果不好
     ],
-    # Scene.twitter.value: [
-    #     ABSAModelRunner.for_mem_twitter,
-    #     # ABSAModelRunner.for_atae_twitter,
-    #     # ABSAModelRunner.for_kgan_laptop, #效果不好
-    # ]
+    Scene.twitter.value: [
+        ABSAModelRunner.for_mem_twitter,
+        # ABSAModelRunner.for_atae_twitter,
+        # ABSAModelRunner.for_kgan_laptop, #效果不好
+    ]
 }
 
 
@@ -321,7 +321,7 @@ def start_experiment_atae(scene: str, sentences: list[Sentence], chat_model: str
     dao = ExperimentDao()
     get_experiments()
     for function in for_someone_atae[scene]:
-        if exist_experiment(chat_model, method):
+        if exist_experiment(chat_model, method, scene):
             continue
         come = function(aug_sentences=sentences)
         if come.method == "":
@@ -336,7 +336,7 @@ def start_experiment_mem(scene: str, sentences: list[Sentence], chat_model: str,
     dao = ExperimentDao()
     # get_experiments()
     for function in for_someone_mem[scene]:
-        if exist_experiment(chat_model, method):
+        if exist_experiment(chat_model, method, scene):
             continue
         come = function(aug_sentences=sentences)
         if come.method == "":
@@ -350,9 +350,9 @@ def start_experiment_mem(scene: str, sentences: list[Sentence], chat_model: str,
 experiments = []
 
 
-def exist_experiment(chat_model: str, method: str):
+def exist_experiment(chat_model: str, method: str, scene: str):
     for experiment in experiments:
-        if (experiment.chat_model == chat_model) & (experiment.method == method):
+        if (experiment.chat_model == chat_model) & (experiment.method == method) & (experiment.dataset == scene):
             experiments.remove(experiment)
             print('recover from {0} {1}'.format(chat_model, method))
             return True

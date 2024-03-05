@@ -65,8 +65,6 @@ from handle.tradition_aug_method.eda import eda_gen_data
 # handle.run()
 
 
-
-
 # outcome_write_to_db(r'C:\Users\16230\Desktop\log3')
 # outcome_write_to_db(r'C:\Users\16230\PycharmProjects\dataHandle\log')
 
@@ -181,8 +179,7 @@ from handle.tradition_aug_method.eda import eda_gen_data
 # print()
 
 random_select(step=0.25, epoch=10)
-#
-# random_select_mem(step=0.25, epoch=10)
+random_select_mem(step=0.25, epoch=10)
 
 # random_select_eda(step=0.2)
 # random_select_aeda(step=0.2)

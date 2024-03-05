@@ -122,6 +122,8 @@ def random_select(step=0.25, epoch=10):
     dao = DataSetDao()
     for di, de in enumerate(Scene):
         scene = de.value
+        if scene == Scene.twitter.value:
+            step = 0.2
         prot_sentences = dao.getSentences(scene=scene, model="")
         # start_experiment_atae(
         #     scene=scene,
@@ -130,32 +132,37 @@ def random_select(step=0.25, epoch=10):
         #     method=RandomSelect.method_1,
         # )
         prot_map = {}
-        l = 0
-        for p in prot_sentences:
-            l += len(p.aspect_polarity)
-            prot_map[p.sentenceId] = p
+        for prot in prot_sentences:
+            prot_map[prot.sentenceId] = prot
+        aug_all = []
         for ci, ce in enumerate(ChatModel):
             model = ce.value
             aug_sentences = dao.getSentences(scene=scene, model=model)
             for s in aug_sentences:
-                if len(s.aspect_polarity) == 0:
-                    s.aspect_polarity = prot_map[s.protId].aspect_polarity
-            print("random_select {0}".format(len(aug_sentences)))
-            ram_sel = RandomSelect(aug_sentences, l, step, epoch)
-            while ram_sel.forward():
-                print("random_select forward {0}".format(len(ram_sel.outcomes)))
-                start_experiment_atae(
-                    scene=scene,
-                    sentences=ram_sel.outcomes,
-                    chat_model=model,
-                    method=ram_sel.method_1,
-                )
+                try:
+                    if len(s.aspect_polarity) == 0:
+                        s.aspect_polarity = prot_map[s.protId].aspect_polarity
+                except:
+                    pass
+            aug_all.extend(aug_sentences)
+        print("random_select {0}".format(len(aug_all)))
+        ram_sel = RandomSelect(aug_all, len(prot_sentences), step, epoch)
+        while ram_sel.forward():
+            print("random_select forward {0}".format(len(ram_sel.outcomes)))
+            start_experiment_atae(
+                scene=scene,
+                sentences=ram_sel.outcomes,
+                chat_model='complex',
+                method=ram_sel.method_1,
+            )
 
 
 def random_select_mem(step=0.25, epoch=10):
     dao = DataSetDao()
     for di, de in enumerate(Scene):
         scene = de.value
+        if scene == Scene.twitter.value:
+            step = 0.2
         prot_sentences = dao.getSentences(scene=scene, model="")
         # start_experiment_mem(
         #     scene=scene,
@@ -164,26 +171,29 @@ def random_select_mem(step=0.25, epoch=10):
         #     method=RandomSelect.method_1,
         # )
         prot_map = {}
-        l = 0
-        for p in prot_sentences:
-            l += len(p.aspect_polarity)
-            prot_map[p.sentenceId] = p
+        for prot in prot_sentences:
+            prot_map[prot.sentenceId] = prot
+        aug_all = []
         for ci, ce in enumerate(ChatModel):
             model = ce.value
             aug_sentences = dao.getSentences(scene=scene, model=model)
             for s in aug_sentences:
-                if len(s.aspect_polarity) == 0:
-                    s.aspect_polarity = prot_map[s.protId].aspect_polarity
-            print("random_select {0}".format(len(aug_sentences)))
-            ram_sel = RandomSelect(aug_sentences, l, step, epoch)
-            while ram_sel.forward_2():
-                print("random_select forward {0}".format(len(ram_sel.outcomes)))
-                start_experiment_mem(
-                    scene=scene,
-                    sentences=ram_sel.outcomes,
-                    chat_model=model,
-                    method=ram_sel.method_2,
-                )
+                try:
+                    if len(s.aspect_polarity) == 0:
+                        s.aspect_polarity = prot_map[s.protId].aspect_polarity
+                except:
+                    pass
+            aug_all.extend(aug_sentences)
+        print("random_select {0}".format(len(aug_all)))
+        ram_sel = RandomSelect(aug_all, len(prot_sentences), step, epoch)
+        while ram_sel.forward_2():
+            print("random_select forward {0}".format(len(ram_sel.outcomes)))
+            start_experiment_mem(
+                scene=scene,
+                sentences=ram_sel.outcomes,
+                chat_model='complex',
+                method=ram_sel.method_2,
+            )
 
 
 def random_select_eda(step=0.25, epoch=10):
